@@ -1,21 +1,29 @@
-import {
-  VStack,
-  FormControl,
-  FormLabel,
-  Button,
-  FormErrorMessage,
-  ButtonGroup,
-  Input,
-  Heading,
-} from "@chakra-ui/react";
+import { VStack, Button, ButtonGroup, Heading } from "@chakra-ui/react";
 import ToggleColorMode from "../src/components/ToggleCOlorMode";
 import { Formik, Form } from "formik";
-import * as yup from "yup";
 import TextField from "../src/components/TextField";
 import { useRouter } from "next/router";
+import { formSchema } from "../utils/formSchema";
+import axios from "axios";
 
 const SignIn = () => {
   const router = useRouter();
+
+  const submitHandler = async (
+    values: { username: string; password: string },
+    actions: any
+  ) => {
+    console.log(values, actions);
+    alert(JSON.stringify(values, null, 2));
+    const vals = { ...values };
+    actions.resetForm();
+    try {
+      const res = await axios.post("/api/auth/sign-in", { data: vals });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -25,13 +33,9 @@ const SignIn = () => {
           username: "",
           password: "",
         }}
-        validationSchema={yup.object({
-          username: yup.string().required("Username is required"),
-          password: yup.string().required("Password is required"),
-        })}
+        validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          alert(JSON.stringify(values, null, 2));
-          actions.resetForm();
+          submitHandler(values, actions);
         }}
       >
         <VStack
