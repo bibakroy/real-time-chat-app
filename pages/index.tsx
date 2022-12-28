@@ -1,4 +1,4 @@
-import ToggleColorMode from "../src/components/ToggleCOlorMode";
+import ToggleColorMode from "../src/components/ToggleColorMode";
 
 export default function Home() {
   return (

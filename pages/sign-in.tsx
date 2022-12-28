@@ -1,5 +1,5 @@
 import { VStack, Button, ButtonGroup, Heading } from "@chakra-ui/react";
-import ToggleColorMode from "../src/components/ToggleCOlorMode";
+import ToggleColorMode from "../src/components/ToggleColorMode";
 import { Formik, Form } from "formik";
 import TextField from "../src/components/TextField";
 import { useRouter } from "next/router";
