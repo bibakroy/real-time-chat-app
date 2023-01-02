@@ -31,7 +31,7 @@ const SignIn = () => {
       const { username, id } = user as UserType;
       setUser({ username, id });
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       setError(error.response.data.message);
     }
