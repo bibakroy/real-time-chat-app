@@ -40,12 +40,12 @@ export default async function signInHandler(
       } else {
         return res
           .status(401)
-          .json({ signIn: false, status: "Wrong username or password" });
+          .json({ signIn: false, message: "Wrong username or password" });
       }
     } else {
       return res
         .status(401)
-        .json({ signIn: false, status: "Wrong username or password" });
+        .json({ signIn: false, message: "Wrong username or password" });
     }
   } catch (error) {
     console.log("error", error);

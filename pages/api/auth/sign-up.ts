@@ -39,7 +39,7 @@ export default async function signInHandler(
     } else {
       return res
         .status(409)
-        .json({ signUp: false, status: "Username already exists" });
+        .json({ signUp: false, message: "Username already exists" });
     }
   } catch (error) {
     console.log("error", error);
