@@ -5,8 +5,13 @@ import TextField from "../src/components/TextField";
 import { useRouter } from "next/router";
 import { formSchema } from "../utils/formSchema";
 import axios from "axios";
+import withAuth from "../src/HOC/withAuth";
+import { useUserContext } from "../src/context/UserContext";
+import jwt from "jsonwebtoken";
+import { UserType } from "../src/types";
 
 const SignIn = () => {
+  const { setUser } = useUserContext();
   const router = useRouter();
 
   const submitHandler = async (
@@ -20,6 +25,11 @@ const SignIn = () => {
     try {
       const res = await axios.post("/api/auth/sign-in", { data: vals });
       console.log(res);
+      localStorage.setItem("token", res.data.token);
+      const user = jwt.decode(res.data.token);
+      const { username, id } = user as UserType;
+      setUser({ username, id });
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -79,4 +89,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default withAuth(SignIn);
