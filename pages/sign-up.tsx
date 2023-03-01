@@ -1,12 +1,19 @@
-import { VStack, Button, ButtonGroup, Heading } from "@chakra-ui/react";
+import { VStack, Button, ButtonGroup, Heading, Text } from "@chakra-ui/react";
 import ToggleColorMode from "../src/components/ToggleColorMode";
 import { Formik, Form } from "formik";
 import TextField from "../src/components/TextField";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { formSchema } from "../utils/formSchema";
+import withAuth from "../src/HOC/withAuth";
+import { useUserContext } from "../src/context/UserContext";
+import jwt from "jsonwebtoken";
+import { UserType } from "../src/types";
+import { useState } from "react";
 
 const SignUp = () => {
+  const [error, setError] = useState(null);
+  const { setUser } = useUserContext();
   const router = useRouter();
 
   const submitHandler = async (
@@ -14,14 +21,20 @@ const SignUp = () => {
     actions: any
   ) => {
     console.log(values, actions);
-    alert(JSON.stringify(values, null, 2));
     const vals = { ...values };
     actions.resetForm();
     try {
       const res = await axios.post("/api/auth/sign-up", { data: vals });
       console.log(res);
-    } catch (error) {
+
+      localStorage.setItem("token", res.data.token);
+      const user = jwt.decode(res.data.token);
+      const { username, id } = user as UserType;
+      setUser({ username, id });
+      router.push("/");
+    } catch (error: any) {
       console.log(error);
+      setError(error.response.data.message);
     }
   };
 
@@ -47,6 +60,9 @@ const SignUp = () => {
           spacing="1rem"
         >
           <Heading>Sign Up</Heading>
+          <Text as="p" color="red.500">
+            {error}
+          </Text>
           <TextField
             name="username"
             placeholder="Enter username"
@@ -79,4 +95,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default withAuth(SignUp);
